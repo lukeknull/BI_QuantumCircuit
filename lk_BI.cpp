@@ -40,14 +40,10 @@ quantum_kernel void measure_all() {
 }
 
 quantum_kernel void gates(double angle1, double angle2) {
-    /// Add logic here
     H(q[0]);
     CNOT(q[0], q[1]);
     RY(q[0], angle1);
     RY(q[1], angle2);
-    //H(q[1]);
-    //RY(q[0], angle1);
-    //RY(q[1], angle2);
 }
 
 
@@ -97,46 +93,34 @@ int main() {
     double total_probability = 0;
     iqsdk::QssMap<double> probability_map;
 
+    // Calculate Correlations
     prepare_all();
     gates(a1, b1);
-    
-    
-    
     probability_map = iqs_device.getProbabilities(qids, bases);
     iqs_device.displayProbabilities(probability_map);
     cor1 = getCor(probability_map);
     
-    
-    
-    
     prepare_all();
     gates(a1, b2);
-    
     probability_map = iqs_device.getProbabilities(qids, bases);
     iqs_device.displayProbabilities(probability_map);
     cor2 = getCor(probability_map);
     
-    
-    
-    
-    
     prepare_all();
     gates(a2, b1);
-    
     probability_map = iqs_device.getProbabilities(qids, bases);
     iqs_device.displayProbabilities(probability_map);
     cor3 = getCor(probability_map);
     
     prepare_all();
     gates(a2, b2);
-    
     probability_map = iqs_device.getProbabilities(qids, bases);
     iqs_device.displayProbabilities(probability_map);
     cor4 = getCor(probability_map);
     
     std::cout << "E(a,b)=" << cor1 << ", E(a',b)=" << cor2 << ", E(a,b')=" << cor3 << ", E(a',b')=" << cor4 << std::endl;
     std::cout << "S=E(a,b)-E(a',b)+E(a,b')+E(a',b')" << std::endl;
-    std::cout << "If |S| > 2, QM predicts violation of Bell's Inequality:" << std::endl;
+    std::cout << "If |S|>2, QM predicts violation of Bell's Inequality:" << std::endl;
     std::cout << "S=" << cor1 - cor2 + cor3 + cor4 << std::endl;
     
     
