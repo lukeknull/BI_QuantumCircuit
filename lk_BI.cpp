@@ -72,33 +72,38 @@ int main() {
     }
     
     // Angles for violating Bell's Inequality
-    double a1 = 3*M_PI/4;
+    double a1 = 
     double b1 = M_PI/2;
     double a2 = M_PI/4;
     double b2 = 0;
     
-    // E/Correlation values, aka Average of A(a,λ)*
+    // E/Correlation values, aka Average of A(θ,λ)*B(Φ,λ)
     double cor1 = 0;
     double cor2 = 0;
     double cor3 = 0;
     double cor4 = 0;
     
     
+    
+    // |00> and |11> state basis put in a vector (essentially a list)
+    // These are used to tell the program which probabilities of the entangled system to output
+    // Thus, this makes it output the probability of measuring |00> and of measuring |11>.
     iqsdk::QssIndex state_a("|00>");
     iqsdk::QssIndex state_b("|11>");
     std::vector<iqsdk::QssIndex> bases;
     bases.push_back(state_a);
     bases.push_back(state_b);
     
-    double total_probability = 0;
+    
     iqsdk::QssMap<double> probability_map;
 
-    // Calculate Correlations
-    prepare_all();
-    gates(a1, b1);
-    probability_map = iqs_device.getProbabilities(qids, bases);
-    iqs_device.displayProbabilities(probability_map);
-    cor1 = getCor(probability_map);
+    // Calculates Correlations, aka E(a,b), E(a, b'), E(a, b'), E(a', b').
+
+    prepare_all(); // Prepares all qbits in Z direction
+    gates(a1, b1); // Applies quantum gates, with angles a1 and b1 for rotations of q0 and q1
+    probability_map = iqs_device.getProbabilities(qids, bases); // Makes probability map of |00> and |11>
+    iqs_device.displayProbabilities(probability_map); // Outputs these probabilities
+    cor1 = getCor(probability_map); // uses getCor to calculate correlation w/ this map
     
     prepare_all();
     gates(a1, b2);
@@ -118,6 +123,7 @@ int main() {
     iqs_device.displayProbabilities(probability_map);
     cor4 = getCor(probability_map);
     
+    // Outputs results
     std::cout << "E(a,b)=" << cor1 << ", E(a',b)=" << cor2 << ", E(a,b')=" << cor3 << ", E(a',b')=" << cor4 << std::endl;
     std::cout << "S=E(a,b)-E(a',b)+E(a,b')+E(a',b')" << std::endl;
     std::cout << "If |S|>2, QM predicts violation of Bell's Inequality:" << std::endl;
