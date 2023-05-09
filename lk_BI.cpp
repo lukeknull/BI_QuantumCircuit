@@ -72,7 +72,7 @@ int main() {
     }
     
     // Angles for violating Bell's Inequality
-    double a1 = 
+    double a1 = 3*M_PI/4;
     double b1 = M_PI/2;
     double a2 = M_PI/4;
     double b2 = 0;
